@@ -1,0 +1,104 @@
+{
+    "System": {
+        "OS": "Windows",
+        "OS Version": "10.0.22631",
+        "OS Release": "11",
+        "Architecture": "AMD64",
+        "Computer Name": "NNKtv28"
+    },
+    "CPU": {
+        "Physical Cores": 8,
+        "Total Cores": 16,
+        "CPU Usage": "4.8%",
+        "Processor": "AMD Ryzen 7 5700X 8-Core Processor             ",
+        "Base Speed": "3401 MHz",
+        "Architecture": 9
+    },
+    "Memory": {
+        "Total": "31.89 GB",
+        "Available": "21.54 GB",
+        "Used": "10.35 GB",
+        "Percentage": "32.4%"
+    },
+    "Disk": {
+        "C:\\": {
+            "Mount Point": "C:\\",
+            "File System": "NTFS",
+            "Total": "930.69 GB",
+            "Used": "898.00 GB",
+            "Free": "32.70 GB",
+            "Percentage": "96.5%"
+        },
+        "D:\\": {
+            "Mount Point": "D:\\",
+            "File System": "NTFS",
+            "Total": "1863.00 GB",
+            "Used": "1609.02 GB",
+            "Free": "253.98 GB",
+            "Percentage": "86.4%"
+        }
+    },
+    "Network": {
+        "Ethernet": {
+            "Status": "Down",
+            "Speed": "Unknown",
+            "MTU": "1500"
+        },
+        "vEthernet (WSL (Hyper-V firewall))": {
+            "Status": "Up",
+            "Speed": "4294 Mbps",
+            "MTU": "1500"
+        },
+        "Loopback Pseudo-Interface 1": {
+            "Status": "Up",
+            "Speed": "1073 Mbps",
+            "MTU": "1500"
+        },
+        "Tailscale": {
+            "Status": "Up",
+            "Speed": "4294 Mbps",
+            "MTU": "65535"
+        },
+        "Wi-Fi": {
+            "Status": "Up",
+            "Speed": "260 Mbps",
+            "MTU": "1500"
+        },
+        "Conexi\u00f3n de \u00e1rea local* 9": {
+            "Status": "Down",
+            "Speed": "Unknown",
+            "MTU": "1500"
+        },
+        "Conexi\u00f3n de \u00e1rea local* 10": {
+            "Status": "Down",
+            "Speed": "Unknown",
+            "MTU": "1500"
+        }
+    },
+    "Graphics": {
+        "Meta Virtual Monitor": {
+            "Driver Version": "17.12.55.198",
+            "Video Memory": "Unknown",
+            "Video Processor": null,
+            "Resolution": "NonexNone"
+        },
+        "Virtual Desktop Monitor": {
+            "Driver Version": "13.50.53.699",
+            "Video Memory": "Unknown",
+            "Video Processor": null,
+            "Resolution": "NonexNone"
+        },
+        "Parsec Virtual Display Adapter": {
+            "Driver Version": "0.45.0.0",
+            "Video Memory": "Unknown",
+            "Video Processor": null,
+            "Resolution": "NonexNone"
+        },
+        "NVIDIA GeForce RTX 4070": {
+            "Driver Version": "32.0.15.7216",
+            "Video Memory": "-0.00 GB",
+            "Video Processor": "NVIDIA GeForce RTX 4070",
+            "Resolution": "1920x1080"
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "max_workers": 4,
+    "verify_copies": true,
+    "compression": true,
+    "retention_days": 30,
+    "excluded_files": [
+        ".lock",
+        "Cache",
+        "GPUCache",
+        "CacheDictionary",
+        "Code Cache",
+        "Service Worker"
+    ],
+    "browsers": {
+        "chrome": true,
+        "firefox": true,
+        "edge": true,
+        "brave": true,
+        "opera": true,
+        "operagx": true,
+        "vivaldi": true
+    },
+    "backup_options": {
+        "bookmarks": true,
+        "history": true,
+        "passwords": true,
+        "extensions": true,
+        "cookies": true,
+        "preferences": true
+    }
+}
