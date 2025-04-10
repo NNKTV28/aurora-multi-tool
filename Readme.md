@@ -1,3 +1,4 @@
+![aurora_mtt_logo](https://github.com/user-attachments/assets/fdb5e547-399e-4b3e-a698-689cbb352675)
 # Aurora Multi Tool 🛠️
 
 A comprehensive Windows system utility suite that provides powerful tools for system maintenance, browser management, and hardware monitoring.
