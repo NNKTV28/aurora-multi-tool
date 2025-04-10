@@ -1,2 +1,9 @@
-psutil>=5.9.0
-wmi>=1.5.1
+psutil
+wmi
+PyPDF2
+Pillow
+speedtest
+speedtest-cli
+python_nmap
+requests
+cryptography

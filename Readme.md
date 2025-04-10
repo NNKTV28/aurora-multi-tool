@@ -18,14 +18,14 @@ A comprehensive Windows system utility suite that provides powerful tools for sy
   - Detailed system information reporting
   - Hardware monitoring and diagnostics
   
-- **Settings Management**
-  - Customizable tool configurations
-  - Profile-based settings
-  - Configuration backup and restore
-
-- **Random string generator**
+- **Utilities**
   - Generate random strings for various purposes
-  - Customize string length and character set
+  - Perform disk speed tests
+  - Analyze memory usage
+  - Profile application performance
+  - Monitor network activity
+  - Perform network speed tests
+  - Scan open ports on a target host
 
 ## 📋 Requirements
 
@@ -66,7 +66,7 @@ wmi>=1.5.1
    ```
 
 2. **Navigate the Menu**
-   - Use numbers 1-7 to select different tools
+   - Use numbers 1-14 to select different tools
    - Follow on-screen instructions for each tool
    - Press Enter to confirm selections
 
@@ -78,15 +78,21 @@ aurora-multi-tool/
 ├── config/
 ├── logs/
 ├── tools/
+│   ├── application_performance_profiler.py
 │   ├── backup_browser.py
 │   ├── clean_cache.py
+│   ├── disk_speed_test.py
 │   ├── generate_random_string.py
+│   ├── memory_analysis.py
+│   ├── network_monitor.py
+│   ├── network_speed_test.py
+│   ├── port_scanner.py
 │   ├── restore_browser_backup.py
-│   └── settings_manager.py
+│   ├── settings_manager.py
 │   ├── system_info.py
 │   ├── update_drivers.py
 ├── config/
-│   └── settings.json
+│   └── browser_backup_config.json
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
@@ -100,7 +106,7 @@ aurora-multi-tool/
 - Each tool can be configured through the Settings Manager
 
 ## 🤝 Contributing
-1. Check our [Contribution community rules and code standarts](https://github.com/NNKTV28/aurora-multi-tool/wiki/Contributing)
+1. Check our [Contribution community rules and code standards](https://github.com/NNKTV28/aurora-multi-tool/wiki/Contributing)
 2. Fork the repository
 3. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
