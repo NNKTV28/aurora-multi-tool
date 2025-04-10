@@ -1,10 +1,11 @@
 import psutil
 
+
 def memory_analysis():
     """Analyze system memory usage."""
     print("Memory Analysis")
     print("-" * 30)
-    
+
     try:
         virtual_memory = psutil.virtual_memory()
         swap_memory = psutil.swap_memory()
@@ -19,8 +20,10 @@ def memory_analysis():
     except Exception as e:
         print(f"Error: {e}")
 
+
 def main():
     memory_analysis()
+
 
 if __name__ == "__main__":
     main()

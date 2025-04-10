@@ -1,10 +1,11 @@
 import speedtest
 
+
 def network_speed_test():
     """Perform a network speed test."""
     print("Network Speed Test")
     print("-" * 30)
-    
+
     try:
         st = speedtest.Speedtest()
         st.get_best_server()
@@ -16,8 +17,10 @@ def network_speed_test():
     except Exception as e:
         print(f"Error: {e}")
 
+
 def main():
     network_speed_test()
+
 
 if __name__ == "__main__":
     main()

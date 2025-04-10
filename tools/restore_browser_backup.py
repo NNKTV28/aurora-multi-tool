@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 import platform
 from tqdm import tqdm
 
+
 class BrowserRestore:
     def __init__(self):
         self.setup_logging()
@@ -17,17 +18,16 @@ class BrowserRestore:
 
     def setup_logging(self):
         """Configure logging system"""
-        log_dir = Path('logs')
+        log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
-        
-        log_file = log_dir / f'browser_restore_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+
+        log_file = (
+            log_dir / f'browser_restore_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+        )
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
         self.logger = logging.getLogger(__name__)
 
@@ -36,11 +36,11 @@ class BrowserRestore:
         backup_root = Path(__file__).parent.parent / "backups"
         if not backup_root.exists():
             return []
-        
+
         return sorted(
             [d for d in backup_root.iterdir() if d.is_dir()],
             key=lambda x: x.stat().st_mtime,
-            reverse=True
+            reverse=True,
         )
 
     def select_backup(self) -> Optional[Path]:
@@ -69,24 +69,29 @@ class BrowserRestore:
         if not self.source_backup:
             return
 
-        available_browsers = [d for d in self.source_backup.iterdir() 
-                            if d.is_dir() and d.name not in ['.git', '__pycache__']]
+        available_browsers = [
+            d
+            for d in self.source_backup.iterdir()
+            if d.is_dir() and d.name not in [".git", "__pycache__"]
+        ]
 
         print("\nSelect browsers to restore:")
         for i, browser in enumerate(available_browsers, 1):
             print(f"{i}. {browser.name}")
         print("A. All browsers")
 
-        choice = input("\nEnter numbers (comma-separated) or 'A' for all: ").strip().upper()
-        
-        if choice == 'A':
+        choice = (
+            input("\nEnter numbers (comma-separated) or 'A' for all: ").strip().upper()
+        )
+
+        if choice == "A":
             self.browsers_to_restore = {b.name: b for b in available_browsers}
             return
 
         try:
-            selections = [int(x.strip()) for x in choice.split(',')]
+            selections = [int(x.strip()) for x in choice.split(",")]
             self.browsers_to_restore = {
-                available_browsers[i-1].name: available_browsers[i-1]
+                available_browsers[i - 1].name: available_browsers[i - 1]
                 for i in selections
                 if 1 <= i <= len(available_browsers)
             }
@@ -98,11 +103,11 @@ class BrowserRestore:
         """Get current browser installation paths"""
         system = platform.system()
         paths = {}
-        
+
         if system == "Windows":
-            app_data = Path(os.getenv('LOCALAPPDATA', ''))
-            roaming = Path(os.getenv('APPDATA', ''))
-            
+            app_data = Path(os.getenv("LOCALAPPDATA", ""))
+            roaming = Path(os.getenv("APPDATA", ""))
+
             paths = {
                 "chrome": app_data / "Google/Chrome/User Data",
                 "firefox": roaming / "Mozilla/Firefox/Profiles",
@@ -110,13 +115,15 @@ class BrowserRestore:
                 "brave": app_data / "BraveSoftware/Brave-Browser/User Data",
                 "opera": roaming / "Opera Software/Opera Stable",
                 "operagx": roaming / "Opera Software/Opera GX Stable",
-                "vivaldi": app_data / "Vivaldi/User Data"
+                "vivaldi": app_data / "Vivaldi/User Data",
             }
         # Add Linux and MacOS paths if needed
 
         return {k: v for k, v in paths.items() if v.exists()}
 
-    def restore_browser(self, browser_name: str, source_path: Path, dest_path: Path) -> bool:
+    def restore_browser(
+        self, browser_name: str, source_path: Path, dest_path: Path
+    ) -> bool:
         """Restore a single browser's data"""
         try:
             if not source_path.exists():
@@ -124,10 +131,10 @@ class BrowserRestore:
                 return False
 
             # Count files for progress bar
-            total_files = sum(1 for _ in source_path.rglob('*') if _.is_file())
-            
+            total_files = sum(1 for _ in source_path.rglob("*") if _.is_file())
+
             with tqdm(total=total_files, desc=f"Restoring {browser_name}") as pbar:
-                for src_file in source_path.rglob('*'):
+                for src_file in source_path.rglob("*"):
                     if src_file.is_file():
                         rel_path = src_file.relative_to(source_path)
                         dst_file = dest_path / rel_path
@@ -147,7 +154,7 @@ class BrowserRestore:
     def run(self):
         """Main restore execution"""
         self.logger.info("Starting browser restore process")
-        
+
         self.source_backup = self.select_backup()
         if not self.source_backup:
             print("No backup selected. Exiting.")
@@ -166,12 +173,14 @@ class BrowserRestore:
                 futures = {}
                 for browser, source in self.browsers_to_restore.items():
                     if browser in browser_paths:
-                        futures[executor.submit(
-                            self.restore_browser,
-                            browser,
-                            source,
-                            browser_paths[browser]
-                        )] = browser
+                        futures[
+                            executor.submit(
+                                self.restore_browser,
+                                browser,
+                                source,
+                                browser_paths[browser],
+                            )
+                        ] = browser
 
                 for future in futures:
                     browser = futures[future]
@@ -186,12 +195,14 @@ class BrowserRestore:
             self.logger.error(f"Restore process failed: {e}")
             return False
 
+
 def main():
     restore = BrowserRestore()
     if restore.run():
         print("\nRestore completed successfully!")
     else:
         print("\nRestore completed with errors. Check the logs for details.")
+
 
 if __name__ == "__main__":
     main()

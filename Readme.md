@@ -12,12 +12,12 @@ A comprehensive Windows system utility suite that provides powerful tools for sy
   - Clear browser cache and temporary files
   - Backup important browser data (bookmarks, history, passwords)
   - Restore browser data from backups
-  
+
 - **System Maintenance**
   - Automated system driver updates
   - Detailed system information reporting
   - Hardware monitoring and diagnostics
-  
+
 - **Utilities**
   - Generate random strings for various purposes
   - Perform disk speed tests

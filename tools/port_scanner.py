@@ -1,9 +1,11 @@
 import python_nmap as nmap
+
+
 def port_scanner():
     """Scan open ports on a target host."""
     print("Port Scanner")
     print("-" * 30)
-    
+
     try:
         target = input("Enter the target IP or hostname: ").strip()
         ports = input("Enter the range of ports to scan (e.g., 1-1000): ").strip()
@@ -23,8 +25,10 @@ def port_scanner():
     except Exception as e:
         print(f"Error: {e}")
 
+
 def main():
     port_scanner()
+
 
 if __name__ == "__main__":
     main()

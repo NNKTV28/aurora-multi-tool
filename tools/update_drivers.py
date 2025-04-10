@@ -11,41 +11,41 @@ import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 
+
 class DriverUpdater:
     def __init__(self):
         self.setup_logging()
-        self.temp_dir = Path(os.environ['TEMP']) / 'driver_updates'
-        self.backup_dir = Path(os.environ['USERPROFILE']) / 'DriverBackups'
+        self.temp_dir = Path(os.environ["TEMP"]) / "driver_updates"
+        self.backup_dir = Path(os.environ["USERPROFILE"]) / "DriverBackups"
         self.config = self.load_config()
         self.session = requests.Session()
-        
+
     def setup_logging(self):
         """Configure logging for the application"""
-        log_dir = Path('logs')
+        log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
-        
-        log_file = log_dir / f'driver_update_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+
+        log_file = (
+            log_dir / f'driver_update_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+        )
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
         self.logger = logging.getLogger(__name__)
 
     def load_config(self):
         """Load configuration from config file"""
-        config_path = Path('config/driver_update_config.json')
+        config_path = Path("config/driver_update_config.json")
         default_config = {
             "api_url": "https://windowsupdate.microsoft.com/catalog/api/drivers",
             "backup_drivers": True,
             "concurrent_updates": 3,
             "retry_attempts": 3,
-            "timeout": 30
+            "timeout": 30,
         }
-        
+
         if config_path.exists():
             try:
                 with open(config_path) as f:
@@ -59,11 +59,15 @@ class DriverUpdater:
         """Backup existing driver before update"""
         try:
             self.backup_dir.mkdir(exist_ok=True)
-            backup_file = self.backup_dir / f"driver_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pbk"
-            
+            backup_file = (
+                self.backup_dir
+                / f"driver_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pbk"
+            )
+
             subprocess.run(
-                ['pnputil', '/export-driver', device_id, str(backup_file)],
-                check=True, capture_output=True
+                ["pnputil", "/export-driver", device_id, str(backup_file)],
+                check=True,
+                capture_output=True,
             )
             self.logger.info(f"Driver backup created: {backup_file}")
             return True
@@ -75,11 +79,12 @@ class DriverUpdater:
         """Get list of device hardware IDs from Windows registry with improved error handling"""
         device_ids = []
         try:
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
-                              r"SYSTEM\CurrentControlSet\Enum", 
-                              0, 
-                              winreg.KEY_READ) as key:
-                
+            with winreg.OpenKey(
+                winreg.HKEY_LOCAL_MACHINE,
+                r"SYSTEM\CurrentControlSet\Enum",
+                0,
+                winreg.KEY_READ,
+            ) as key:
                 i = 0
                 while True:
                     try:
@@ -98,20 +103,20 @@ class DriverUpdater:
                         break
         except WindowsError as e:
             self.logger.error(f"Error accessing registry: {e}")
-        
+
         return list(set(device_ids))  # Remove duplicates
 
     def check_driver_update(self, device_id):
         """Check for driver updates with retry mechanism"""
-        for attempt in range(self.config['retry_attempts']):
+        for attempt in range(self.config["retry_attempts"]):
             try:
                 response = self.session.get(
-                    self.config['api_url'],
+                    self.config["api_url"],
                     params={
                         "hwid": device_id,
-                        "os": f"{sys.getwindowsversion().major}.{sys.getwindowsversion().minor}"
+                        "os": f"{sys.getwindowsversion().major}.{sys.getwindowsversion().minor}",
                     },
-                    timeout=self.config['timeout']
+                    timeout=self.config["timeout"],
                 )
                 response.raise_for_status()
                 data = response.json()
@@ -122,38 +127,41 @@ class DriverUpdater:
                         "has_update": True,
                         "download_url": latest_driver["downloadUrl"],
                         "version": latest_driver["version"],
-                        "name": latest_driver.get("name", "Unknown Driver")
+                        "name": latest_driver.get("name", "Unknown Driver"),
                     }
                 break
             except (requests.RequestException, KeyError) as e:
                 self.logger.warning(f"Attempt {attempt + 1} failed: {e}")
-                if attempt == self.config['retry_attempts'] - 1:
-                    self.logger.error(f"Failed to check updates after {self.config['retry_attempts']} attempts")
+                if attempt == self.config["retry_attempts"] - 1:
+                    self.logger.error(
+                        f"Failed to check updates after {self.config['retry_attempts']} attempts"
+                    )
 
         return {
             "has_update": False,
             "download_url": None,
             "version": None,
-            "name": "Unknown Driver"
+            "name": "Unknown Driver",
         }
 
     def download_driver(self, driver_url, save_path):
         """Download driver file with progress bar and verification"""
         try:
             response = self.session.get(driver_url, stream=True)
-            total_size = int(response.headers.get('content-length', 0))
-            
-            with open(save_path, 'wb') as f, \
-                 tqdm(total=total_size, unit='B', unit_scale=True) as pbar:
+            total_size = int(response.headers.get("content-length", 0))
+
+            with open(save_path, "wb") as f, tqdm(
+                total=total_size, unit="B", unit_scale=True
+            ) as pbar:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
                         pbar.update(len(chunk))
-            
+
             # Verify download
             if os.path.getsize(save_path) != total_size:
                 raise ValueError("Downloaded file size mismatch")
-            
+
             return True
         except Exception as e:
             self.logger.error(f"Download failed: {e}")
@@ -162,18 +170,20 @@ class DriverUpdater:
     def process_device(self, device_id):
         """Process a single device update"""
         self.logger.info(f"Checking updates for device: {device_id}")
-        
+
         driver_info = self.check_driver_update(device_id)
-        if driver_info['has_update']:
-            self.logger.info(f"Update available for {driver_info['name']}: version {driver_info['version']}")
-            
-            if self.config['backup_drivers']:
+        if driver_info["has_update"]:
+            self.logger.info(
+                f"Update available for {driver_info['name']}: version {driver_info['version']}"
+            )
+
+            if self.config["backup_drivers"]:
                 self.backup_current_driver(device_id)
-            
-            filename = os.path.basename(driver_info['download_url'])
+
+            filename = os.path.basename(driver_info["download_url"])
             save_path = self.temp_dir / filename
-            
-            if self.download_driver(driver_info['download_url'], save_path):
+
+            if self.download_driver(driver_info["download_url"], save_path):
                 if self.install_driver(save_path):
                     self.logger.info(f"Successfully updated {driver_info['name']}")
                 save_path.unlink(missing_ok=True)
@@ -195,8 +205,10 @@ class DriverUpdater:
             return
 
         self.logger.info(f"Found {len(device_ids)} devices")
-        
-        with ThreadPoolExecutor(max_workers=self.config['concurrent_updates']) as executor:
+
+        with ThreadPoolExecutor(
+            max_workers=self.config["concurrent_updates"]
+        ) as executor:
             executor.map(self.process_device, device_ids)
 
         # Cleanup
@@ -204,7 +216,7 @@ class DriverUpdater:
             self.temp_dir.rmdir()
         except OSError:
             self.logger.warning("Could not remove temp directory - it may not be empty")
-        
+
         self.logger.info("Driver update process completed")
 
     @staticmethod
@@ -212,15 +224,19 @@ class DriverUpdater:
         """Check for admin privileges"""
         try:
             return ctypes.windll.shell32.IsUserAnAdmin()
-        except:
+        except Exception:
             return False
+
 
 def main():
     updater = DriverUpdater()
     if not updater.check_admin():
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1
+        )
         return
     updater.run()
+
 
 if __name__ == "__main__":
     main()

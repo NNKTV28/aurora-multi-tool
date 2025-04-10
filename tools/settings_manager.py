@@ -5,29 +5,29 @@ import logging
 from datetime import datetime
 from typing import Dict, Any
 
+
 class SettingsManager:
     def __init__(self):
         self.setup_logging()
-        self.config_dir = Path('config')
+        self.config_dir = Path("config")
         self.config_dir.mkdir(exist_ok=True)
         self.configs = {
-            'browser_backup': 'browser_backup_config.json',
-            'driver_update': 'driver_update_config.json'
+            "browser_backup": "browser_backup_config.json",
+            "driver_update": "driver_update_config.json",
         }
 
     def setup_logging(self):
         """Configure logging system"""
-        log_dir = Path('logs')
+        log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
-        
-        log_file = log_dir / f'settings_manager_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+
+        log_file = (
+            log_dir / f'settings_manager_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+        )
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
         )
         self.logger = logging.getLogger(__name__)
 
@@ -36,12 +36,12 @@ class SettingsManager:
         if config_name not in self.configs:
             self.logger.error(f"Unknown config: {config_name}")
             return {}
-            
+
         config_path = self.config_dir / self.configs[config_name]
         if not config_path.exists():
             self.logger.warning(f"Config file not found: {config_path}")
             return {}
-            
+
         try:
             with open(config_path) as f:
                 return json.load(f)
@@ -54,10 +54,10 @@ class SettingsManager:
         if config_name not in self.configs:
             self.logger.error(f"Unknown config: {config_name}")
             return False
-            
+
         config_path = self.config_dir / self.configs[config_name]
         try:
-            with open(config_path, 'w') as f:
+            with open(config_path, "w") as f:
                 json.dump(settings, f, indent=4)
             self.logger.info(f"Settings saved to {config_path}")
             return True
@@ -71,7 +71,7 @@ class SettingsManager:
         if not settings:
             print(f"\nNo settings found for {config_name}")
             return
-            
+
         print(f"\nCurrent settings for {config_name}:")
         print("-" * 40)
         for key, value in settings.items():
@@ -82,17 +82,17 @@ class SettingsManager:
         settings = self.load_config(config_name)
         print(f"\nEditing settings for {config_name}")
         print("Press Enter to keep current value, or enter new value:")
-        
+
         for key, current_value in settings.items():
             while True:
                 new_value = input(f"{key} ({current_value}): ").strip()
                 if not new_value:
                     break
-                    
+
                 try:
                     # Convert string input to appropriate type
                     if isinstance(current_value, bool):
-                        new_value = new_value.lower() in ('true', 'yes', '1', 'y')
+                        new_value = new_value.lower() in ("true", "yes", "1", "y")
                     elif isinstance(current_value, int):
                         new_value = int(new_value)
                     elif isinstance(current_value, float):
@@ -101,11 +101,12 @@ class SettingsManager:
                     break
                 except ValueError:
                     print("Invalid input. Please try again.")
-        
+
         if self.save_config(config_name, settings):
             print("\nSettings updated successfully!")
         else:
             print("\nFailed to update settings.")
+
 
 def main():
     manager = SettingsManager()
@@ -117,23 +118,24 @@ def main():
         print("3. View Driver Update Settings")
         print("4. Edit Driver Update Settings")
         print("5. Return to Main Menu")
-        
+
         choice = input("\nSelect an option (1-5): ").strip()
-        
+
         if choice == "1":
-            manager.display_settings('browser_backup')
+            manager.display_settings("browser_backup")
         elif choice == "2":
-            manager.edit_settings('browser_backup')
+            manager.edit_settings("browser_backup")
         elif choice == "3":
-            manager.display_settings('driver_update')
+            manager.display_settings("driver_update")
         elif choice == "4":
-            manager.edit_settings('driver_update')
+            manager.edit_settings("driver_update")
         elif choice == "5":
             break
         else:
             print("\nInvalid choice. Please try again.")
-        
+
         input("\nPress Enter to continue...")
+
 
 if __name__ == "__main__":
     main()
