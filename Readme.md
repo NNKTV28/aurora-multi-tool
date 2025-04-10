@@ -23,6 +23,10 @@ A comprehensive Windows system utility suite that provides powerful tools for sy
   - Profile-based settings
   - Configuration backup and restore
 
+- **Random string generator**
+  - Generate random strings for various purposes
+  - Customize string length and character set
+
 ## 📋 Requirements
 
 - Windows 10 or Windows 11
@@ -70,16 +74,20 @@ wmi>=1.5.1
 
 ```
 aurora-multi-tool/
+├── backups/
+├── config/
+├── logs/
 ├── tools/
-│   ├── clean_cache.py
 │   ├── backup_browser.py
+│   ├── clean_cache.py
+│   ├── generate_random_string.py
 │   ├── restore_browser_backup.py
-│   ├── update_drivers.py
-│   ├── system_info.py
 │   └── settings_manager.py
+│   ├── system_info.py
+│   ├── update_drivers.py
 ├── config/
 │   └── settings.json
-├── logs/
+├── .gitignore
 ├── README.md
 ├── requirements.txt
 └── multi_tool.py

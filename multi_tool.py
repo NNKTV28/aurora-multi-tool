@@ -73,7 +73,8 @@ def show_menu():
         "4": ("Update System Drivers", "update_drivers.py"),
         "5": ("System Information", "system_info.py"),
         "6": ("Settings Manager", "settings_manager.py"),
-        "7": ("Exit", None)
+        "7": ("Generate Random String", "generate_random_string.py"),  # New tool added here
+        "8": ("Exit", None)
     }
     
     while True:
@@ -84,12 +85,12 @@ def show_menu():
         for key, (name, _) in options.items():
             print(f"{key}. {name}")
         
-        choice = input("\nSelect an option (1-7): ").strip()
+        choice = input("\nSelect an option (1-8): ").strip()
         
         if choice in options:
             tool_name, script_name = options[choice]
             
-            if choice == "7":
+            if choice == "8":
                 print("\nThank you for using Aurora Multi-Tool!")
                 sleep(1.5)
                 sys.exit(0)
