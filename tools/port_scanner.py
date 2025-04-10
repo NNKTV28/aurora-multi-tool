@@ -1,4 +1,4 @@
-import python_nmap as nmap
+import python_nmap as nmap  # type: ignore
 
 
 def port_scanner():
