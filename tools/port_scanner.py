@@ -1,5 +1,7 @@
-import python_nmap as nmap  # type: ignore
-
+try:
+    import python_nmap as nmap  # type: ignore
+except:
+    import nmap # type: ignore
 
 def port_scanner():
     """Scan open ports on a target host."""
