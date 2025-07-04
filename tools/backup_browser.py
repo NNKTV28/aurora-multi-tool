@@ -9,7 +9,7 @@ from tqdm import tqdm
 import time
 import hashlib
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class BrowserBackup:

@@ -1,5 +1,4 @@
 import psutil
-import time
 
 
 def application_performance_profiler():

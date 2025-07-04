@@ -1,7 +1,6 @@
 import os
 import subprocess
 import platform
-from pathlib import Path
 import sys
 from time import sleep
 

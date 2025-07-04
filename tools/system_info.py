@@ -1,7 +1,5 @@
 import platform
 import psutil
-import os
-import sys
 from datetime import datetime
 import json
 from pathlib import Path
