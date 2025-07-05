@@ -21,6 +21,44 @@ def print_header():
     print("=" * 50)
     print()
 
+class Sandbox(object):
+    def __init__(self):
+        self.namespace = {}
+
+    def load(self, code: str):
+        exec(code, self.namespace)
+
+        # Check if tool meets standard
+        name = self.namespace.get("name")
+        main = self.namespace.get("main")
+        check = self.namespace.get("check_platform_compatibility")
+
+        if not (name and main and check):
+            raise
+
+
+    def check(self):
+        platform_check = self.namespace.get("check_platform_compatibility")
+        return platform_check()
+
+    def execute(self):
+        tool = self.namespace.get("main")
+        tool()
+
+    def get_name(self):
+        return self.namespace.get("name")
+
+class Loader(object):
+    def __init__(self):
+        self.tools = {}
+
+    def load(self, path):
+        tool = Sandbox()
+        with open(path, 'r', encoding='utf-8') as f:
+            tool.load(''.join(f.readlines()))
+        tool_name = tool.get_name()
+        self.tools[tool_name] = tool
+
 
 def run_tool(script_name, tool_name):
     """Run a tool script with error handling"""
