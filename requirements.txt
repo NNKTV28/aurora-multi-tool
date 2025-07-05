@@ -1,9 +1,6 @@
 psutil
 wmi
-PyPDF2
-Pillow
-speedtest
 speedtest-cli
 python_nmap
 requests
-cryptography
+tqdm
