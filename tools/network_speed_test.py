@@ -1,8 +1,8 @@
-import speedtest
+name = "Network Speed Test"
 
-
-def network_speed_test():
+def main():
     """Perform a network speed test."""
+    import speedtest
     print("Network Speed Test")
     print("-" * 30)
 
@@ -17,10 +17,14 @@ def network_speed_test():
     except Exception as e:
         print(f"Error: {e}")
 
+def check_platform_compatibility():
+    supported = True
+    warnings = []
 
-def main():
-    network_speed_test()
+    try:
+        import speedtest
+    except:
+        supported = False
+        warnings.append("Dependency 'speedtest-cli' is missing")
 
-
-if __name__ == "__main__":
-    main()
+    return supported, warnings

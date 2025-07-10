@@ -1,9 +1,9 @@
-import psutil
-import time
-import requests
+name = "Network Monitor"
 
+def main():
+    import psutil
+    import time
 
-def network_monitor():
     """Monitor network activity."""
     print("Network Monitor")
     print("-" * 30)
@@ -25,10 +25,14 @@ def network_monitor():
     except Exception as e:
         print(f"Error: {e}")
 
+def check_platform_compatibility():
+    supported = True
+    warnings = []
 
-def main():
-    network_monitor()
+    try:
+        import psutil
+    except:
+        supported = False
+        warnings.append("Dependency 'psutil' is missing")
 
-
-if __name__ == "__main__":
-    main()
+    return supported, warnings

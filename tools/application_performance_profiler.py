@@ -1,7 +1,7 @@
-import psutil
+name = "Application Performance Profiler"
 
-
-def application_performance_profiler():
+def main():
+    import psutil
     """Profile CPU and memory usage of running processes."""
     print("Application Performance Profiler")
     print("-" * 30)
@@ -29,9 +29,12 @@ def application_performance_profiler():
         print(f"Error: {e}")
 
 
-def main():
-    application_performance_profiler()
-
-
-if __name__ == "__main__":
-    main()
+def check_platform_compatibility():
+    supported = True
+    warnings = []
+    try:
+        import psutil
+    except:
+        supported = False
+        warnings.append("Dependency 'psutil' is missing")
+    return supported, warnings

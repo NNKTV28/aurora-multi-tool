@@ -1,16 +1,18 @@
-import random
-import string
-
-
-def generate_random_string(length: int) -> str:
-    """Generate a random string of specified length."""
-    if length <= 0:
-        raise ValueError("Length must be a positive integer.")
-    characters = string.ascii_letters + string.digits + string.punctuation
-    return "".join(random.choice(characters) for _ in range(length))
-
+name = "Generate Random String"
 
 def main():
+    import random
+    import string
+
+
+    def generate_random_string(length: int) -> str:
+        """Generate a random string of specified length."""
+        if length <= 0:
+            raise ValueError("Length must be a positive integer.")
+        characters = string.ascii_letters + string.digits + string.punctuation
+        return "".join(random.choice(characters) for _ in range(length))
+
+
     print("Random String Generator")
     print("-" * 30)
     try:
@@ -23,5 +25,8 @@ def main():
         print("\nOperation cancelled by user.")
 
 
-if __name__ == "__main__":
-    main()
+def check_platform_compatibility():
+    supported = True
+    warnings = []
+
+    return supported, warnings
