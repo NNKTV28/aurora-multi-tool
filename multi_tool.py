@@ -6,10 +6,11 @@ from time import sleep
 
 def clear_screen():
     """Clear terminal screen based on OS"""
-    if platform.system() == "Windows":
-        os.system("cls")
-    else:
-        os.system("clear")
+    #if platform.system() == "Windows":
+    #    os.system("cls")
+    #else:
+    #    os.system("clear")
+    pass
 
 
 def print_header():
@@ -94,7 +95,7 @@ def show_menu(path):
     options = {}
 
     # Get all the files ended with .py
-    files = [f for f in os.listdir(path) if f.endswith('.py') and os.path.isfile(os.path.join(path, f))]
+    files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.py') and os.path.isfile(os.path.join(path, f))]
     loader = Loader()
     for file in files:
         try:
@@ -133,15 +134,14 @@ def show_menu(path):
 
         choice = input(f"\nSelect an option (1-{len(options)}): ").strip()
 
+        # Since the exit option is always the last in the list, len(options) = Exit option's number
+        if choice == str(len(options)):
+            print("\nThank you for using Aurora Multi-Tool!")
+            sleep(1.5)
+            sys.exit(0)
+
         if choice in options:
             tool_name= options[choice]
-
-            # Since the exit option is always the last in the list, len(options) = Exit option's number
-            if choice == str(len(options)):
-                print("\nThank you for using Aurora Multi-Tool!")
-                sleep(1.5)
-                sys.exit(0)
-
             run_tool(loader, tool_name)
         else:
             print("\nInvalid choice. Please try again.")
