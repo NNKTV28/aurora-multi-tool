@@ -6,11 +6,11 @@ from time import sleep
 
 def clear_screen():
     """Clear terminal screen based on OS"""
-    #if platform.system() == "Windows":
-    #    os.system("cls")
-    #else:
-    #    os.system("clear")
-    pass
+    if platform.system() == "Windows":
+        os.system("cls")
+    else:
+        os.system("clear")
+
 
 
 def print_header():
@@ -125,27 +125,27 @@ def show_menu(path):
     options[count] = "Exit"
 
     while True:
-        print_header()
         print("Available Tools:")
         print("-" * 20)
 
         for key, name in options.items():
             print(f"{key}. {name}")
 
-        choice = input(f"\nSelect an option (1-{len(options)}): ").strip()
+        choice = int(input(f"\nSelect an option (1-{len(options)}): ").strip())
 
         # Since the exit option is always the last in the list, len(options) = Exit option's number
-        if choice == str(len(options)):
+        if choice == len(options):
             print("\nThank you for using Aurora Multi-Tool!")
             sleep(1.5)
             sys.exit(0)
 
-        if choice in options:
+        if choice in options.keys():
             tool_name= options[choice]
             run_tool(loader, tool_name)
         else:
             print("\nInvalid choice. Please try again.")
             sleep(1.5)
+        print_header()
 
 
 def main(path):
