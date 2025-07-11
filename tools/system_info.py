@@ -210,6 +210,12 @@ def check_platform_compatibility():
         supported = False
         warnings.append("Dependency 'psutil' is missing")
 
+    try:
+        import wmi
+    except:
+        supported = False
+        warnings.append("Dependency 'wmi' is missing")
+
     import platform
     if not platform.system() == "Windows":
         supported = False
