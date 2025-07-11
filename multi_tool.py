@@ -17,7 +17,7 @@ def print_header():
     """Print tool header"""
     clear_screen()
     print("=" * 50)
-    print("           Aurora Multi-Tool v1.1")
+    print("           Aurora Multi-Tool v2.0")
     print("=" * 50)
     print()
 
