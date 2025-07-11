@@ -131,8 +131,12 @@ def show_menu(path):
         for key, name in options.items():
             print(f"{key}. {name}")
 
-        choice = int(input(f"\nSelect an option (1-{len(options)}): ").strip())
-
+        try:
+            choice = int(input(f"\nSelect an option (1-{len(options)}): ").strip())
+        except ValueError:
+            print("\nInvalid input. Please enter a number.")
+            sleep(1.5)
+            continue
         # Since the exit option is always the last in the list, len(options) = Exit option's number
         if choice == len(options):
             print("\nThank you for using Aurora Multi-Tool!")
