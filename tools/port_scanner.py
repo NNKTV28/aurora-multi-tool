@@ -1,10 +1,11 @@
-try:
-    import python_nmap as nmap  # type: ignore
-except:
-    import nmap # type: ignore
+name = "Port Scanner"
 
-def port_scanner():
+def main():
     """Scan open ports on a target host."""
+    try:
+        import python_nmap as nmap  # type: ignore
+    except:
+        import nmap # type: ignore
     print("Port Scanner")
     print("-" * 30)
 
@@ -28,9 +29,18 @@ def port_scanner():
         print(f"Error: {e}")
 
 
-def main():
-    port_scanner()
+def check_platform_compatibility():
+    supported = True
+    warnings = []
+    try:
+        try:
+            import python_nmap as nmap  # type: ignore
+        except:
+            import nmap
+    except:
+        supported = False
+        warnings.append("Dependency 'python_nmap' is missing")
+
+    return supported, warnings
 
 
-if __name__ == "__main__":
-    main()

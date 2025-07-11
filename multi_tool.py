@@ -1,5 +1,4 @@
 import os
-import subprocess
 import platform
 import sys
 from time import sleep
@@ -13,6 +12,7 @@ def clear_screen():
         os.system("clear")
 
 
+
 def print_header():
     """Print tool header"""
     clear_screen()
@@ -21,103 +21,141 @@ def print_header():
     print("=" * 50)
     print()
 
+class Sandbox(object):
+    def __init__(self):
+        self.namespace = {}
 
-def run_tool(script_name, tool_name):
+    def load(self, code: str):
+        exec(code, self.namespace)
+
+        # Check if tool meets standard
+        name = self.namespace.get("name")
+        main = self.namespace.get("main")
+        check = self.namespace.get("check_platform_compatibility")
+
+        if not (name and main and check):
+            raise Exception("Code doesn't meet standard")
+
+
+    def check(self):
+        platform_check = self.namespace.get("check_platform_compatibility")
+        return platform_check()
+
+    def execute(self):
+        tool = self.namespace.get("main")
+        tool()
+
+    def get_name(self):
+        return self.namespace.get("name")
+
+class Loader(object):
+    def __init__(self):
+        self.tools = {}
+
+    def load(self, path):
+        tool = Sandbox()
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                tool.load(''.join(f.readlines()))
+        except:
+            raise Exception(f"File {path} doesn't meet standard")
+        tool_name = tool.get_name()
+        self.tools[tool_name] = tool
+
+
+def run_tool(loader, tool_name):
     """Run a tool script with error handling"""
     try:
-        tool_path = os.path.join("tools", script_name)
-        if not os.path.exists(tool_path):
-            raise FileNotFoundError(f"Tool script not found: {tool_path}")
-
         print(f"\nRunning {tool_name}...")
         print("-" * 30)
 
-        subprocess.run([sys.executable, tool_path], check=True)
+        loader.tools[tool_name].execute()
 
         print("\nOperation completed successfully!")
-        input("\nPress Enter to continue...")
 
-    except FileNotFoundError as e:
+    except Exception as e:
         print(f"\nError: {e}")
-        input("\nPress Enter to continue...")
-    except subprocess.CalledProcessError:
-        print(f"\nError: Failed to run {tool_name}")
-        input("\nPress Enter to continue...")
     except KeyboardInterrupt:
         print("\nOperation cancelled by user")
-        input("\nPress Enter to continue...")
+
+    input("\nPress Enter to continue...")
 
 
-def validate_environment():
+def validate_environment(path):
     """Validate required directories and files exist"""
-    if not os.path.exists("tools"):
-        os.makedirs("tools")
-
-    required_files = [
-        "tools/clean_cache.py",
-        "tools/backup_browser.py",
-        "tools/update_drivers.py",
-    ]
-
-    missing_files = [f for f in required_files if not os.path.exists(f)]
-    if missing_files:
-        print("Error: Missing required files:")
-        for f in missing_files:
-            print(f"- {f}")
+    if not os.path.exists(path):
+        print("Error: Missing tools folder")
         input("\nPress Enter to exit...")
+        os.mkdir("tools")
         sys.exit(1)
 
 
-def show_menu():
+def show_menu(path):
     """Display the main menu and get user choice"""
-    options = {
-        "1": ("Clean Browser Cache", "clean_cache.py"),
-        "2": ("Backup Browser Data", "backup_browser.py"),
-        "3": ("Restore Browser Backup", "restore_browser_backup.py"),
-        "4": ("Update System Drivers", "update_drivers.py"),
-        "5": ("System Information", "system_info.py"),
-        "6": ("Settings Manager", "settings_manager.py"),
-        "7": ("Generate Random String", "generate_random_string.py"),
-        "8": ("Disk Speed Test", "disk_speed_test.py"),
-        "9": ("Memory Analysis", "memory_analysis.py"),
-        "10": (
-            "Application Performance Profiler",
-            "application_performance_profiler.py",
-        ),
-        "11": ("Network Speed Test", "network_speed_test.py"),
-        "12": ("Port Scanner", "port_scanner.py"),
-        "13": ("Network Monitor", "network_monitor.py"),
-        "14": ("Exit", None),
-    }
+    options = {}
+
+    # Get all the files ended with .py
+    files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.py') and os.path.isfile(os.path.join(path, f))]
+    loader = Loader()
+    for file in files:
+        try:
+            loader.load(file)
+        except:
+            print(f"Tool '{file}' doesn't meet the required standard")
+
+    count = 1
+    for tool_name in loader.tools.keys():
+
+        tool = loader.tools[tool_name]
+
+        # Run tool's platform support check
+        supported, warnings = tool.check()
+
+        for warning in warnings:
+            print(warning)
+
+        if supported:
+            options[count] = tool_name
+            print(f"Tool {tool_name} loaded")
+            count += 1
+        else:
+            print(f"Tool {tool_name} not loaded")
+    
+    # Add exit option
+    options[count] = "Exit"
 
     while True:
-        print_header()
         print("Available Tools:")
         print("-" * 20)
 
-        for key, (name, _) in options.items():
+        for key, name in options.items():
             print(f"{key}. {name}")
 
-        choice = input("\nSelect an option (1-14): ").strip()
+        try:
+            choice = int(input(f"\nSelect an option (1-{len(options)}): ").strip())
+        except ValueError:
+            print("\nInvalid input. Please enter a number.")
+            sleep(1.5)
+            continue
+        # Since the exit option is always the last in the list, len(options) = Exit option's number
+        if choice == len(options):
+            print("\nThank you for using Aurora Multi-Tool!")
+            sleep(1.5)
+            sys.exit(0)
 
-        if choice in options:
-            tool_name, script_name = options[choice]
-
-            if choice == "14":
-                print("\nThank you for using Aurora Multi-Tool!")
-                sleep(1.5)
-                sys.exit(0)
-
-            run_tool(script_name, tool_name)
+        if choice in options.keys():
+            tool_name= options[choice]
+            run_tool(loader, tool_name)
         else:
             print("\nInvalid choice. Please try again.")
             sleep(1.5)
+        print_header()
 
 
-def main():
+def main(path):
     try:
-        validate_environment()
-        show_menu()
+        validate_environment(path)
+        show_menu(path)
     except Exception as e:
         print(f"\nUnexpected error: {e}")
         input("\nPress Enter to exit...")
@@ -125,4 +163,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("./tools")

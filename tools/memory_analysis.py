@@ -1,8 +1,8 @@
-import psutil
+name = "Memory Analysis"
 
-
-def memory_analysis():
+def main():
     """Analyze system memory usage."""
+    import psutil
     print("Memory Analysis")
     print("-" * 30)
 
@@ -20,10 +20,14 @@ def memory_analysis():
     except Exception as e:
         print(f"Error: {e}")
 
+def check_platform_compatibility():
+    supported = True
+    warnings = []
 
-def main():
-    memory_analysis()
+    try:
+        import psutil
+    except:
+        supported = False
+        warnings.append("Dependency 'psutil' is missing")
 
-
-if __name__ == "__main__":
-    main()
+    return supported, warnings
