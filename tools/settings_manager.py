@@ -67,7 +67,7 @@ def main():
                 self.logger.error(f"Error saving config file {config_path}: {e}")
                 return False
 
-        def display_settings(self, config_name: str):
+        def display_backup_settings(self, config_name: str):
             """Display current settings for a configuration"""
             settings = self.load_config(config_name)
             if not settings:
@@ -75,9 +75,35 @@ def main():
                 return
 
             print(f"\nCurrent settings for {config_name}:")
-            print("-" * 40)
-            for key, value in settings.items():
-                print(f"{key}: {value}")
+            print("-" * 50)
+            
+            print("\nGeneral Settings:")
+            print(f"Max Workers: {settings.get('max_workers', 'N/A')}")
+            print(f"Verify Copies: {settings.get('verify_copies', 'N/A')}")
+            print(f"Compression: {settings.get('compression', 'N/A')}")
+            print(f"Retention Days: {settings.get('retention_days', 'N/A')}")
+            
+            print("\nExcluded Files:")
+            for file in settings.get('excluded_files', []):
+                print(f"  • {file}")
+            
+            print("\nBrowsers to Backup:")
+            for browser, enabled in settings.get('browsers', {}).items():
+                status = "✓" if enabled else "✗"
+                print(f"  {status} {browser.title()}")
+            
+            print("\nBackup Options:")
+            for option, enabled in settings.get('backup_options', {}).items():
+                status = "✓" if enabled else "✗"
+                print(f"  {status} {option.title()}")
+            print("-" * 50)
+
+        def display_driver_settings(self, config_name: str):
+            """Display current settings for a configuration"""
+            settings = self.load_config(config_name)
+            if not settings:
+                print(f"\nNo settings found for {config_name}")
+                return
 
         def edit_settings(self, config_name: str):
             """Edit settings interactively"""
@@ -124,11 +150,11 @@ def main():
         choice = input("\nSelect an option (1-5): ").strip()
 
         if choice == "1":
-            manager.display_settings("browser_backup")
+            manager.display_backup_settings("browser_backup")
         elif choice == "2":
             manager.edit_settings("browser_backup")
         elif choice == "3":
-            manager.display_settings("driver_update")
+            manager.display_driver_settings("driver_update")
         elif choice == "4":
             manager.edit_settings("driver_update")
         elif choice == "5":
