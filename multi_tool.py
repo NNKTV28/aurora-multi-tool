@@ -85,7 +85,7 @@ def run_tool(loader, tool_name):
 
     input("\nPress Enter to continue...")
 
-# TODO: implement logic to download tool folder from github web instead of making new empty tool folder
+# TODO: implement logic to download tool folder from github web repo instead of making new empty tool folder
 def validate_environment(path):
     """Validate required directories and files exist"""
     if not os.path.exists(path):

@@ -237,7 +237,7 @@ def main():
 
     updater = DriverUpdater()
     if not updater.check_admin():
-        ctypes.windll.shell32.ShellExecuteW(
+        ctypes.windll.shell32.ShellExecuteW( # type: ignore
             None, "runas", sys.executable, " ".join(sys.argv), None, 1
         )
         return
