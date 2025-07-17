@@ -30,14 +30,18 @@ A comprehensive Windows system utility suite that provides powerful tools for sy
 
 ## 📋 Requirements
 
-- Windows 10 or Windows 11
+- Windows 10,  Windows 11 or any Linux distro
 - Python 3.8 or higher
 - Administrator privileges for some features
 
 ### Required Python Packages
 ```bash
-psutil>=5.9.0
-wmi>=1.5.1
+psutil
+wmi
+speedtest-cli
+python_nmap
+requests
+tqdm
 ```
 
 ## 🔧 Installation
@@ -63,7 +67,7 @@ wmi>=1.5.1
 
 1. **Start the Tool**
    ```bash
-   python multi_tool.py
+   python3 multi_tool.py
    ```
 
 2. **Navigate the Menu**
