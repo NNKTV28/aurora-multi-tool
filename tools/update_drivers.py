@@ -99,12 +99,12 @@ def main():
                                         device_ids.extend(hw_id)
                                     elif hw_id:
                                         device_ids.append(hw_id)
-                                except WindowsError:
+                                except OSError:
                                     pass
                             i += 1
-                        except WindowsError:
+                        except OSError:
                             break
-            except WindowsError as e:
+            except OSError as e:
                 self.logger.error(f"Error accessing registry: {e}")
 
             return list(set(device_ids))  # Remove duplicates
