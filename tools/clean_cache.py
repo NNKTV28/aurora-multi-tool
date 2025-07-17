@@ -11,7 +11,9 @@ def main():
         """Get default cache paths based on OS"""
         system = platform.system()
         user_home = str(Path.home())
-
+        
+        paths = {}
+        
         if system == "Windows":
             local_app_data = os.getenv("LOCALAPPDATA")
             app_data = os.getenv("APPDATA")

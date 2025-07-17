@@ -1,3 +1,4 @@
+# This only works on windiows
 name = "Update System Drivers"
 
 def main():
@@ -226,7 +227,9 @@ def main():
         def check_admin():
             """Check for admin privileges"""
             try:
-                return ctypes.windll.shell32.IsUserAnAdmin()
+                if not hasattr(ctypes, 'windll'):
+                    return False
+                return ctypes.windll.shell32.IsUserAnAdmin()  # type: ignore
             except Exception:
                 return False
 

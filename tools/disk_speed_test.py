@@ -8,9 +8,16 @@ def main():
     print("-" * 30)
 
     try:
-        disk_io_start = psutil.disk_io_counters()
+        disk_io_start = psutil.disk_io_counters(perdisk=False)
+        if disk_io_start is None:
+            print("Error: Unable to get disk I/O counters")
+            return
+            
         time.sleep(1)  # Measure over 1 second
-        disk_io_end = psutil.disk_io_counters()
+        disk_io_end = psutil.disk_io_counters(perdisk=False)
+        if disk_io_end is None:
+            print("Error: Unable to get disk I/O counters")
+            return
 
         read_speed = (disk_io_end.read_bytes - disk_io_start.read_bytes) / (
             1024 * 1024
