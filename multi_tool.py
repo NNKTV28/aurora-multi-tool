@@ -39,11 +39,16 @@ class Sandbox(object):
 
     def check(self):
         platform_check = self.namespace.get("check_platform_compatibility")
-        return platform_check()
+        if platform_check is not None:
+            return platform_check()
+        return False
 
     def execute(self):
         tool = self.namespace.get("main")
-        tool()
+        if tool is not None:
+            tool()
+        else:
+            raise Exception("Main function not found")
 
     def get_name(self):
         return self.namespace.get("name")
